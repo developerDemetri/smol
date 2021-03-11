@@ -23,7 +23,7 @@ class Shortener:
     def __init__(self, request: AlbEvent) -> None:
         if request["httpMethod"].upper() != "POST":
             raise BadMethod()
-        if request["headers"].get("Content-Type", None) != "application/json":
+        if request["headers"].get("content-type", None) != "application/json":
             raise BadRequest()
 
         body = loads(request.get("body", "{}"))
