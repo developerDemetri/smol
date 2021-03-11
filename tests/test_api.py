@@ -52,7 +52,7 @@ class TestApi(TestBase):
                     "strict-transport-security": "max-age=31536000; includeSubDomains; preload",
                     "x-xss-protection": "1; mode=block",
                 },
-                body=dumps({"id": "smolio", "target": "https://mrteefs.com"}),
+                body=dumps({"id": "SMOLIO", "target": "https://mrteefs.com"}),
             ),
         )
 

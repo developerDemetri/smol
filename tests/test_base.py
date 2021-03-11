@@ -9,7 +9,7 @@ from smol.link import Link
 
 class TestBase(TestCase):
 
-    mock_link = Link(id="smolio", target="https://mrteefs.com")
+    mock_link = Link(id="SMOLIO", target="https://mrteefs.com")
     mock_get_event = {
         "requestContext": {
             "elb": {
