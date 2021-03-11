@@ -1,12 +1,13 @@
 #!/bin/bash
 set -eo pipefail
 
-pip install -U .
+export CAPTCHA_KEY="mock"
 
-black smol/
-black tests/
+poetry install
+poetry run black smol/
+poetry run black tests/
 
-pylint smol/
-mypy smol/
+poetry run pylint smol/
+poetry run mypy smol/
 
-pytest
+poetry run pytest
