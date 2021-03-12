@@ -23,7 +23,7 @@ class SmolError(Exception):
         """
         return AlbResponse(
             statusCode=cls.error_status.value,
-            statusDescription=cls.error_status.phrase,
+            statusDescription=f"{cls.error_status.value} {cls.error_status.phrase}",
             isBase64Encoded=False,
             headers=dict(),
             body=dumps({"message": cls.error_message}),

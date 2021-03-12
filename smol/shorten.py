@@ -23,7 +23,7 @@ class Shortener:
     def __init__(self, request: AlbEvent) -> None:
         if request["httpMethod"].upper() != "POST":
             raise BadMethod()
-        if request["headers"].get("Content-Type", None) != "application/json":
+        if request["headers"].get("content-type", None) != "application/json":
             raise BadRequest()
 
         body = loads(request.get("body", "{}"))
@@ -57,11 +57,11 @@ class Shortener:
         """
         Creates new short link
         """
-        if not Captcha.verify_captcha(self.token):
+        if self.token is None or not Captcha.verify_captcha(self.token):
             LOGGER.warning(f"Invalid token: {self.token}")
             raise BadRequest()
 
-        if not validators.url(self.target, public=True):
+        if self.target is None or not validators.url(self.target, public=True):
             LOGGER.warning(f"Invalid target: {self.target}")
             raise BadRequest()
 

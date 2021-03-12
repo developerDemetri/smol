@@ -18,11 +18,11 @@ from smol.types import AlbEvent, AlbResponse
 
 EMPTY_BODY = dumps(dict())
 STANDARD_HEADERS = {
-    "Access-Control-Allow-Origin": "https://smol.io",
-    "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
-    "Content-Type": "application/json",
-    "Strict-Transport-Security": "max-age=31536000; includeSubDomains; preload",
-    "X-XSS-Protection": "1; mode=block",
+    "access-control-allow-origin": "https://smol.io",
+    "access-control-allow-methods": "POST, GET, OPTIONS",
+    "content-type": "application/json",
+    "strict-transport-security": "max-age=31536000; includeSubDomains; preload",
+    "x-xss-protection": "1; mode=block",
 }
 
 ecs_handler = StreamHandler(stdout)
@@ -38,29 +38,32 @@ def alb_handler(event: AlbEvent, _: Any) -> AlbResponse:
     try:
         if event["path"].lower() == "/api/v1/link":
             if event["httpMethod"].upper() == "OPTIONS":
+                status = HTTPStatus.OK
                 resp = AlbResponse(
-                    statusCode=HTTPStatus.OK.value,
-                    statusDescription=HTTPStatus.OK.phrase,
+                    statusCode=status.value,
+                    statusDescription=f"{status.value} {status.phrase}",
                     isBase64Encoded=False,
                     headers=dict(),
                     body=EMPTY_BODY,
                 )
             else:
                 new_link = Shortener(event).shorten_link()
+                status = HTTPStatus.CREATED
                 resp = AlbResponse(
-                    statusCode=HTTPStatus.CREATED.value,
-                    statusDescription=HTTPStatus.CREATED.phrase,
+                    statusCode=status.value,
+                    statusDescription=f"{status.value} {status.phrase}",
                     isBase64Encoded=False,
                     headers=dict(),
                     body=dumps({"id": new_link.id, "target": new_link.target}),
                 )
         else:
             resolved_link = Resolver(event).resolve_link()
+            status = HTTPStatus.MOVED_PERMANENTLY
             resp = AlbResponse(
-                statusCode=HTTPStatus.MOVED_PERMANENTLY.value,
-                statusDescription=HTTPStatus.MOVED_PERMANENTLY.phrase,
+                statusCode=status.value,
+                statusDescription=f"{status.value} {status.phrase}",
                 isBase64Encoded=False,
-                headers={"Location": resolved_link.target},
+                headers={"location": resolved_link.target},
                 body=EMPTY_BODY,
             )
     except SmolError as smol_err:

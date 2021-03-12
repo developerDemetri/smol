@@ -2,9 +2,10 @@ from logging import getLogger
 from os import environ
 from typing import Optional
 
-from requests import post
+import requests
 from requests.exceptions import HTTPError
 
+CAPTCHA_KEY = environ["CAPTCHA_KEY"]
 CAPTCHA_URI = "https://www.google.com/recaptcha/api/siteverify"
 LOGGER = getLogger(__name__)
 
@@ -14,10 +15,8 @@ class Captcha:
     Handles reCaptcha verification
     """
 
-    _CAPTCHA_KEY = environ["CAPTCHA_KEY"]
-
-    @classmethod
-    def verify_captcha(cls, token: Optional[str] = None) -> bool:
+    @staticmethod
+    def verify_captcha(token: Optional[str] = None) -> bool:
         """
         Verify reCaptcha challenge token
         """
@@ -26,8 +25,8 @@ class Captcha:
             return False
 
         try:
-            resp = post(
-                CAPTCHA_URI, data={"secret": cls._CAPTCHA_KEY, "response": token}
+            resp = requests.post(
+                CAPTCHA_URI, data={"secret": CAPTCHA_KEY, "response": token}
             )
             resp.raise_for_status()
             resp_data = resp.json()
