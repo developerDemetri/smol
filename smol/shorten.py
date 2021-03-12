@@ -27,8 +27,8 @@ class Shortener:
             raise BadRequest()
 
         body = loads(request.get("body", "{}"))
-        self.target = body.get("target", None)
-        self.token = body.get("token", None)
+        self.target = str(body.get("target", None))
+        self.token = str(body.get("token", None))
 
     @staticmethod
     def _generate_id() -> str:
@@ -57,11 +57,11 @@ class Shortener:
         """
         Creates new short link
         """
-        if self.token is None or not Captcha.verify_captcha(self.token):
+        if not Captcha.verify_captcha(self.token):
             LOGGER.warning(f"Invalid token: {self.token}")
             raise BadRequest()
 
-        if self.target is None or not validators.url(self.target, public=True):
+        if not validators.url(self.target, public=True):
             LOGGER.warning(f"Invalid target: {self.target}")
             raise BadRequest()
 

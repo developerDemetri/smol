@@ -74,6 +74,7 @@ class TestBase(TestCase):
         environ["AWS_ACCESS_KEY_ID"] = "mock"
         environ["AWS_SECRET_ACCESS_KEY"] = "mock"
         environ["CAPTCHA_KEY"] = "mock"
+        environ["SAFE_BROWSING_KEY"] = "mock"
 
     def tearDown(self) -> None:
         flexmock_teardown()
