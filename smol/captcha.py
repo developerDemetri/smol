@@ -2,7 +2,7 @@ from logging import getLogger
 from os import environ
 from typing import Optional
 
-from requests import post
+import requests
 from requests.exceptions import HTTPError
 
 CAPTCHA_KEY = environ["CAPTCHA_KEY"]
@@ -25,7 +25,9 @@ class Captcha:
             return False
 
         try:
-            resp = post(CAPTCHA_URI, data={"secret": CAPTCHA_KEY, "response": token})
+            resp = requests.post(
+                CAPTCHA_URI, data={"secret": CAPTCHA_KEY, "response": token}
+            )
             resp.raise_for_status()
             resp_data = resp.json()
             verify_success = resp_data.get("success", False)
