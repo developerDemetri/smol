@@ -7,6 +7,7 @@ from smol import api
 from smol.exceptions import BadRequest
 from smol.resolve import Resolver
 from smol.shorten import Shortener
+
 from tests.test_base import TestBase
 
 

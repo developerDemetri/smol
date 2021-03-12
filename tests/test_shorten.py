@@ -5,12 +5,12 @@ from flexmock import flexmock
 import pytest
 
 from smol.captcha import Captcha
-from smol.exceptions import BadMethod, BadRequest
+from smol.exceptions import BadMethod, BadRequest, SmolError
+from smol.link import Link
+from smol.safe_site import SafeSite
 from smol.shorten import Shortener
 
 from tests.test_base import TestBase
-from smol.exceptions import BadMethod, BadRequest, SmolError
-from smol.link import Link
 
 
 class TestShortener(TestBase):
@@ -51,6 +51,9 @@ class TestShortener(TestBase):
     def test_shorten_link(self):
         flexmock(Captcha).should_receive("verify_captcha").with_args(
             "fakeCaptcha"
+        ).and_return(True).once()
+        flexmock(SafeSite).should_receive("is_safe_site").with_args(
+            "https://mrteefs.com"
         ).and_return(True).once()
         flexmock(Shortener).should_receive("_generate_id").and_return("SMOLIO").once()
         flexmock(Link).should_receive("save").once()
@@ -106,3 +109,14 @@ class TestShortener(TestBase):
 
         with pytest.raises(BadRequest):
             Shortener(event).shorten_link()
+
+    def test_shorten_link_unsafe_url(self):
+        flexmock(Captcha).should_receive("verify_captcha").with_args(
+            "fakeCaptcha"
+        ).and_return(True).once()
+        flexmock(SafeSite).should_receive("is_safe_site").with_args(
+            "https://mrteefs.com"
+        ).and_return(False).once()
+
+        with pytest.raises(BadRequest):
+            Shortener(self.mock_post_event).shorten_link()
