@@ -8,6 +8,7 @@ from smol.captcha import Captcha
 from smol.exceptions import BadMethod, BadRequest, SmolError
 from smol.link import ID_CHARS, ID_LENGTH
 from smol.link import Link
+from smol.safe_site import SafeSite
 from smol.types import AlbEvent
 
 MAX_GENERATION_ATTEMPTS = 100
@@ -27,8 +28,8 @@ class Shortener:
             raise BadRequest()
 
         body = loads(request.get("body", "{}"))
-        self.target = body.get("target", None)
-        self.token = body.get("token", None)
+        self.target = str(body.get("target", str()))
+        self.token = str(body.get("token", str()))
 
     @staticmethod
     def _generate_id() -> str:
@@ -57,12 +58,16 @@ class Shortener:
         """
         Creates new short link
         """
-        if self.token is None or not Captcha.verify_captcha(self.token):
+        if not Captcha.verify_captcha(self.token):
             LOGGER.warning(f"Invalid token: {self.token}")
             raise BadRequest()
 
-        if self.target is None or not validators.url(self.target, public=True):
+        if not validators.url(self.target, public=True):
             LOGGER.warning(f"Invalid target: {self.target}")
+            raise BadRequest()
+
+        if not SafeSite.is_safe_site(self.target):
+            LOGGER.warning(f"Unsafe target: {self.target}")
             raise BadRequest()
 
         target_id = self._generate_id()

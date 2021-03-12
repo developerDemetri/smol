@@ -16,7 +16,7 @@ class Resolver:
         if request["httpMethod"].upper() != "GET":
             raise BadMethod()
 
-        link_path = request["path"].strip()
+        link_path = str(request["path"]).strip()
         self.link_id = link_path.strip("/").upper()
 
     def resolve_link(self) -> Link:

@@ -18,13 +18,10 @@ class TestCaptcha(TestBase):
         ).once()
         flexmock(requests).should_receive("post").with_args(
             "https://www.google.com/recaptcha/api/siteverify",
-            data={"secret": CAPTCHA_KEY, "response": self.token},
+            json={"secret": CAPTCHA_KEY, "response": self.token},
         ).and_return(mock_resp).once()
 
         self.assertTrue(Captcha.verify_captcha(self.token))
-
-    def test_verify_captcha_no_token(self):
-        self.assertFalse(Captcha.verify_captcha(None))
 
     def test_verify_captcha_fails(self):
         mock_resp = flexmock()
@@ -34,7 +31,7 @@ class TestCaptcha(TestBase):
         ).once()
         flexmock(requests).should_receive("post").with_args(
             "https://www.google.com/recaptcha/api/siteverify",
-            data={"secret": CAPTCHA_KEY, "response": self.token},
+            json={"secret": CAPTCHA_KEY, "response": self.token},
         ).and_return(mock_resp).once()
 
         self.assertFalse(Captcha.verify_captcha(self.token))
@@ -46,7 +43,7 @@ class TestCaptcha(TestBase):
         ).once()
         flexmock(requests).should_receive("post").with_args(
             "https://www.google.com/recaptcha/api/siteverify",
-            data={"secret": CAPTCHA_KEY, "response": self.token},
+            json={"secret": CAPTCHA_KEY, "response": self.token},
         ).and_return(mock_resp).once()
 
         self.assertFalse(Captcha.verify_captcha(self.token))
