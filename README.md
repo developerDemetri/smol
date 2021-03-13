@@ -1,6 +1,6 @@
 # smol
 
-![Static Tests](https://github.com/github/docs/actions/workflows/static-test.yaml/badge.svg)
+![Static Tests](https://github.com/developerDemetri/smol/actions/workflows/static-test.yaml/badge.svg)
 
 [![codecov](https://codecov.io/gh/developerDemetri/smol/branch/main/graph/badge.svg?token=P3GUZKY64G)](https://codecov.io/gh/developerDemetri/smol)
 
