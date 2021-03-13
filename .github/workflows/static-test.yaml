@@ -16,8 +16,8 @@ jobs:
           poetry install
       - name: Run Static Checks
         run: |
-          poetry run black smol/
-          poetry run black tests/
+          poetry run black --check smol/
+          poetry run black --check tests/
           poetry run pylint smol/
           poetry run mypy smol/
       - name: Run Unit Tests
