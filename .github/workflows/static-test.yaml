@@ -1,0 +1,36 @@
+name: Run static analysis and unit tests
+on: [push]
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    env:
+      OS: ubuntu-latest
+      PYTHON: "3.9"
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v2
+      - name: Setup Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.9
+      - name: Install Poetry Dependencies
+        run: |
+          pip install -U pip poetry
+          poetry install
+      - name: Run Static Checks
+        run: |
+          poetry run black --check smol/
+          poetry run black --check tests/
+          poetry run pylint smol/
+          poetry run mypy smol/
+      - name: Run Unit Tests
+        run: |
+          poetry run pytest
+      - name: Report code coverage to CodeCov
+        uses: codecov/codecov-action@v1
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          files: ./coverage.xml
+          flags: unittests
+          env_vars: OS,PYTHON
+          fail_ci_if_error: true
