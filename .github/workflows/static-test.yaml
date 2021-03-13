@@ -1,0 +1,25 @@
+name: Run static analysis and unit tests
+on: [push]
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v2
+      - name: Setup Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.9
+      - name: Install Poetry Dependencies
+        run: |
+          pip install -U pip poetry
+          poetry install
+      - name: Run Static Checks
+        run: |
+          poetry run black smol/
+          poetry run black tests/
+          poetry run pylint smol/
+          poetry run mypy smol/
+      - name: Run Unit Tests
+        run: |
+          poetry run pytest
