@@ -1,8 +1,8 @@
 name: Deploy to AWS
-on:
+on:  
   workflow_run:
     workflows: ["Static Checks & Tests"]
-    branches: [main, add-infra]
+    branches: [main]
     types: 
       - completed
 jobs:
