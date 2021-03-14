@@ -1,3 +1,5 @@
+## from gitignore
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
@@ -145,3 +147,14 @@ cython_debug/
 # CDK asset staging directory
 .cdk.staging
 cdk.out
+
+## remaining non-essential items
+.gitignore
+.git/*
+.github/*
+scripts/*
+smol_cdk/*
+tests/*
+cdk.json
+Dockerfile
+*.md
