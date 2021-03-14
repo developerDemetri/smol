@@ -1,7 +1,7 @@
-name: Run static analysis and unit tests
-on: [push]
+name: Static Checks & Tests
+on: push
 jobs:
-  run:
+  test:
     runs-on: ubuntu-latest
     env:
       OS: ubuntu-latest
