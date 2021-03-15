@@ -33,5 +33,7 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: us-west-2
       - name: Run CDK Deployment
+        env:
+          CDK_ACCOUNT: ${{ secrets.AWS_ACCOUNT_ID }}
         run: |
           poetry run cdk deploy

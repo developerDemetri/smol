@@ -7,7 +7,9 @@ from aws_cdk.aws_lambda import Code, Function, Handler, Runtime
 from aws_cdk.aws_logs import RetentionDays
 
 from smol_cdk.table import SmolTable
+from smol_cdk.target import SmolTarget
 
+API_HOST = environ.get("FUNCTION_NAME", "api.smol.io")
 FUNCTION_NAME = environ.get("FUNCTION_NAME", "SmolAPI")
 MEMORY_ALLOCATION = int(environ.get("MEMORY_ALLOCATION", "256"))
 RESERVED_CONCURRENCY = int(environ.get("RESERVED_CONCURRENCY", "100"))
@@ -45,3 +47,4 @@ class SmolCdkStack(Stack):
         )
         smol_table.table.grant(smol_lambda, "dynamodb:GetItem")
         smol_table.table.grant(smol_lambda, "dynamodb:PutItem")
+        SmolTarget(self, "SmolTarget", smol_lambda, API_HOST)

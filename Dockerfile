@@ -9,8 +9,7 @@ COPY smol .
 COPY pyproject.toml .
 COPY poetry.lock .
 
-RUN poetry install --no-dev --no-interaction
-
 USER smol
+RUN poetry install --no-dev
 ENTRYPOINT ["poetry", "run", "python", "-m", "awslambdaric"]
 CMD ["smol.api.alb_handler"]
