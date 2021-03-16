@@ -38,6 +38,7 @@ def alb_handler(event: AlbEvent, _: Any) -> AlbResponse:
     try:
         if event["path"].lower() == "/api/v1/link":
             if event["httpMethod"].upper() == "OPTIONS":
+                LOGGER.info("Handling OPTIONS check...")
                 status = HTTPStatus.OK
                 resp = AlbResponse(
                     statusCode=status.value,
@@ -47,6 +48,7 @@ def alb_handler(event: AlbEvent, _: Any) -> AlbResponse:
                     body=EMPTY_BODY,
                 )
             else:
+                LOGGER.info("Handling shortener request...")
                 new_link = Shortener(event).shorten_link()
                 status = HTTPStatus.CREATED
                 resp = AlbResponse(
@@ -57,6 +59,7 @@ def alb_handler(event: AlbEvent, _: Any) -> AlbResponse:
                     body=dumps({"id": new_link.id, "target": new_link.target}),
                 )
         else:
+            LOGGER.info("Handling resolver request...")
             resolved_link = Resolver(event).resolve_link()
             status = HTTPStatus.MOVED_PERMANENTLY
             resp = AlbResponse(

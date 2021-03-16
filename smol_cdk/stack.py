@@ -3,7 +3,7 @@ from os import environ
 
 from aws_cdk.core import Construct, Duration, Environment, Stack
 from aws_cdk.aws_ec2 import SubnetSelection, SubnetType, Vpc
-from aws_cdk.aws_lambda import Code, Function, Handler, Runtime
+from aws_cdk.aws_lambda import Code, Function, Handler, Runtime, Tracing
 from aws_cdk.aws_logs import RetentionDays
 
 from smol_cdk.table import SmolTable
@@ -35,6 +35,10 @@ class SmolCdkStack(Stack):
             self,
             "SmolAPI",
             code=Code.from_asset_image(directory=abspath("./")),
+            environment={
+                "CAPTCHA_KEY": environ["CAPTCHA_KEY"],
+                "SAFE_BROWSING_KEY": environ["SAFE_BROWSING_KEY"],
+            },
             function_name=FUNCTION_NAME,
             handler=Handler.FROM_IMAGE,
             log_retention=RetentionDays.ONE_WEEK,
@@ -42,6 +46,7 @@ class SmolCdkStack(Stack):
             reserved_concurrent_executions=RESERVED_CONCURRENCY,
             runtime=Runtime.FROM_IMAGE,
             timeout=Duration.seconds(TIMEOUT_SEC),
+            tracing=Tracing.ACTIVE,
             vpc=smol_vpc,
             vpc_subnets=smol_subnets,
         )

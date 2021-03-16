@@ -1,4 +1,4 @@
-from json import loads
+from json import loads, JSONDecodeError
 from logging import getLogger
 from random import choice
 
@@ -22,12 +22,21 @@ class Shortener:
     """
 
     def __init__(self, request: AlbEvent) -> None:
-        if request["httpMethod"].upper() != "POST":
+        req_method = request["httpMethod"].upper()
+        if req_method != "POST":
+            LOGGER.warning(f"Invalid method: {req_method}")
             raise BadMethod()
-        if request["headers"].get("content-type", None) != "application/json":
+
+        req_type = str(request["headers"].get("content-type", str()))
+        if "application/json" not in req_type:
+            LOGGER.warning(f"Invalid content-type: {req_type}")
             raise BadRequest()
 
-        body = loads(request.get("body", "{}"))
+        try:
+            body = loads(request.get("body", "{}"))
+        except JSONDecodeError as err:
+            LOGGER.warning(f"Invalid JSON body: {err}")
+            raise BadRequest() from err
         self.target = str(body.get("target", str()))
         self.token = str(body.get("token", str()))
 

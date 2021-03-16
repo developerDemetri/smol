@@ -13,7 +13,9 @@ class Resolver:
     """
 
     def __init__(self, request: AlbEvent) -> None:
-        if request["httpMethod"].upper() != "GET":
+        req_method = request["httpMethod"].upper()
+        if req_method != "GET":
+            LOGGER.warning(f"Invalid method: {req_method}")
             raise BadMethod()
 
         link_path = str(request["path"]).strip()
@@ -24,12 +26,13 @@ class Resolver:
         Resolve Link from given event
         """
         if ID_REGEX.fullmatch(self.link_id) is None:
+            LOGGER.warning(f"Invalid Link: {self.link_id}")
             raise BadRequest()
 
         try:
             target_link = Link.get(self.link_id)
         except Link.DoesNotExist as err:
-            LOGGER.warning(f"Invalid link ID: {self.link_id}")
+            LOGGER.warning(f"Non Existent link ID: {self.link_id}")
             raise LinkNotFound() from err
 
         return target_link
