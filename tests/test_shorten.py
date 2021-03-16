@@ -2,6 +2,7 @@ from copy import deepcopy
 from json import dumps
 
 from flexmock import flexmock
+from pynamodb.exceptions import PutError
 import pytest
 
 from smol.captcha import Captcha
@@ -119,4 +120,17 @@ class TestShortener(TestBase):
         ).and_return(False).once()
 
         with pytest.raises(BadRequest):
+            Shortener(self.mock_post_event).shorten_link()
+
+    def test_shorten_link_id_race_condition(self):
+        flexmock(Captcha).should_receive("verify_captcha").with_args(
+            "fakeCaptcha"
+        ).and_return(True).once()
+        flexmock(SafeSite).should_receive("is_safe_site").with_args(
+            "https://mrteefs.com"
+        ).and_return(True).once()
+        flexmock(Shortener).should_receive("_generate_id").and_return("SMOLIO").once()
+        self.mock_conn.should_receive("put_item").and_raise(PutError()).once()
+
+        with pytest.raises(PutError):
             Shortener(self.mock_post_event).shorten_link()

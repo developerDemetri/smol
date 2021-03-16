@@ -72,5 +72,5 @@ class Shortener:
 
         target_id = self._generate_id()
         new_link = Link(id=target_id, target=self.target)
-        new_link.save()
+        new_link.save(condition=Link.id.does_not_exist())
         return new_link

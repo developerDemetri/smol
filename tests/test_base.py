@@ -2,7 +2,7 @@ from json import dumps
 from os import environ
 from unittest import TestCase
 
-from flexmock import flexmock_teardown
+from flexmock import flexmock, flexmock_teardown
 
 from smol.link import Link
 
@@ -75,6 +75,11 @@ class TestBase(TestCase):
         environ["AWS_SECRET_ACCESS_KEY"] = "mock"
         environ["CAPTCHA_KEY"] = "mock"
         environ["SAFE_BROWSING_KEY"] = "mock"
+
+    def setUp(self) -> None:
+        super().setUp()
+        self.mock_conn = flexmock()
+        flexmock(Link).should_receive("_get_connection").and_return(self.mock_conn)
 
     def tearDown(self) -> None:
         flexmock_teardown()
