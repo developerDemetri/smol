@@ -134,3 +134,26 @@ class TestShortener(TestBase):
 
         with pytest.raises(PutError):
             Shortener(self.mock_post_event).shorten_link()
+
+    def test_shorten_link_varying_content_type(self):
+        event = deepcopy(self.mock_post_event)
+        event["headers"]["content-type"] = "application/json;charset=UTF-8"
+        flexmock(Captcha).should_receive("verify_captcha").with_args(
+            "fakeCaptcha"
+        ).and_return(True).once()
+        flexmock(SafeSite).should_receive("is_safe_site").with_args(
+            "https://mrteefs.com"
+        ).and_return(True).once()
+        flexmock(Shortener).should_receive("_generate_id").and_return("SMOLIO").once()
+        flexmock(Link).should_receive("save").once()
+
+        result = Shortener(event).shorten_link()
+        self.assertEqual(result.id, "SMOLIO")
+        self.assertEqual(result.target, "https://mrteefs.com")
+
+    def test_shorten_link_bad_json(self):
+        event = deepcopy(self.mock_post_event)
+        event["body"] = "{'target'}"
+
+        with pytest.raises(BadRequest):
+            Shortener(event).shorten_link()

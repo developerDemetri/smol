@@ -35,6 +35,10 @@ class SmolCdkStack(Stack):
             self,
             "SmolAPI",
             code=Code.from_asset_image(directory=abspath("./")),
+            environment={
+                "CAPTCHA_KEY": environ["CAPTCHA_KEY"],
+                "SAFE_BROWSING_KEY": environ["SAFE_BROWSING_KEY"],
+            },
             function_name=FUNCTION_NAME,
             handler=Handler.FROM_IMAGE,
             log_retention=RetentionDays.ONE_WEEK,
