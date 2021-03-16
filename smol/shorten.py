@@ -4,12 +4,12 @@ from random import choice
 
 import validators
 
+from smol.alb_types import AlbEvent
 from smol.captcha import Captcha
 from smol.exceptions import BadMethod, BadRequest, SmolError
 from smol.link import ID_CHARS, ID_LENGTH
 from smol.link import Link
 from smol.safe_site import SafeSite
-from smol.types import AlbEvent
 
 MAX_GENERATION_ATTEMPTS = 100
 

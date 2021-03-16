@@ -11,10 +11,10 @@ from sys import stdout
 
 from ecs_logging import StdlibFormatter
 
+from smol.alb_types import AlbEvent, AlbResponse
 from smol.exceptions import SmolError
 from smol.resolve import Resolver
 from smol.shorten import Shortener
-from smol.types import AlbEvent, AlbResponse
 
 EMPTY_BODY = dumps(dict())
 STANDARD_HEADERS = {

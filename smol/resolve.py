@@ -2,7 +2,7 @@ from logging import getLogger
 
 from smol.exceptions import BadMethod, BadRequest, LinkNotFound
 from smol.link import ID_REGEX, Link
-from smol.types import AlbEvent
+from smol.alb_types import AlbEvent
 
 LOGGER = getLogger(__name__)
 
