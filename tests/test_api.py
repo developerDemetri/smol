@@ -4,7 +4,7 @@ from json import dumps
 from flexmock import flexmock
 
 from smol import api
-from smol.exceptions import BadRequest
+from smol.exceptions import BadRequest, LinkNotFound
 from smol.resolve import Resolver
 from smol.shorten import Shortener
 
@@ -78,6 +78,34 @@ class TestApi(TestBase):
                     "x-xss-protection": "1; mode=block",
                 },
                 body="{}",
+            ),
+        )
+
+    def test_alb_handler_resolve_missing(self):
+        flexmock(Resolver).should_receive("resolve_link").with_args().and_raise(
+            LinkNotFound()
+        ).once()
+
+        resp = api.alb_handler(self.mock_get_event, None)
+        self.assertDictEqual(
+            resp,
+            dict(
+                statusCode=301,
+                statusDescription="301 Moved Permanently",
+                isBase64Encoded=False,
+                headers={
+                    "access-control-allow-origin": "https://smol.io",
+                    "access-control-allow-methods": "POST, GET, OPTIONS",
+                    "location": "https://smol.io/?im=lost",
+                    "content-type": "application/json",
+                    "strict-transport-security": "max-age=31536000; includeSubDomains; preload",
+                    "x-xss-protection": "1; mode=block",
+                },
+                body=dumps(
+                    {
+                        "message": "Link Not Found",
+                    }
+                ),
             ),
         )
 
