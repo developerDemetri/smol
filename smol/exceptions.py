@@ -5,7 +5,7 @@
 from http import HTTPStatus
 from json import dumps
 
-from smol.types import AlbResponse
+from smol.alb_types import AlbResponse
 
 
 class SmolError(Exception):

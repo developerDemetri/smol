@@ -32,7 +32,7 @@ class SmolTarget(Construct):
             health_check=HealthCheck(
                 enabled=True, healthy_http_codes="301", path="/mrteef"
             ),
-            targets=[LambdaTarget(function)],
+            targets=[LambdaTarget(function)],  # type: ignore
             target_type=TargetType.LAMBDA,
         )
         smol_api_condition = ListenerCondition.host_headers([api_host])
@@ -40,5 +40,5 @@ class SmolTarget(Construct):
             "SmolTarget",
             conditions=[smol_api_condition],
             priority=1,
-            target_groups=[smol_target_group],
+            target_groups=[smol_target_group],  # type: ignore
         )

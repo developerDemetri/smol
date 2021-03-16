@@ -45,6 +45,7 @@ class SmolCdkStack(Stack):
             vpc=smol_vpc,
             vpc_subnets=smol_subnets,
         )
+        smol_table.table.grant(smol_lambda, "dynamodb:DescribeTable")
         smol_table.table.grant(smol_lambda, "dynamodb:GetItem")
         smol_table.table.grant(smol_lambda, "dynamodb:PutItem")
         SmolTarget(self, "SmolTarget", smol_lambda, API_HOST)

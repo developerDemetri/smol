@@ -6,6 +6,7 @@ from string import ascii_uppercase, digits
 from pynamodb.models import Model
 from pynamodb.attributes import UnicodeAttribute
 
+DYNAMO_REGION = environ.get("AWS_REGION", "us-west-2")
 DYNAMO_TABLE = environ.get("TABLE_NAME", "smol")
 ID_LENGTH = 6
 ID_CHARS = f"{ascii_uppercase}{digits}"
@@ -24,6 +25,7 @@ class Link(Model):
         DynamoDB config
         """
 
+        region = DYNAMO_REGION
         table_name = DYNAMO_TABLE
 
     id = UnicodeAttribute(hash_key=True)
