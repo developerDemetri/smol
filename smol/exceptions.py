@@ -4,8 +4,11 @@
 
 from http import HTTPStatus
 from json import dumps
+from os import environ
 
 from smol.alb_types import AlbResponse
+
+LOST_PAGE = environ.get("LOST_PAGE", "https://smol.io/?im=lost")
 
 
 class SmolError(Exception):
@@ -55,3 +58,17 @@ class LinkNotFound(SmolError):
 
     error_status = HTTPStatus.NOT_FOUND
     error_message = "Link Not Found"
+
+    @classmethod
+    def response(cls) -> AlbResponse:
+        """
+        Redirect missing Links to lost page
+        """
+        status = HTTPStatus.MOVED_PERMANENTLY
+        return AlbResponse(
+            statusCode=status.value,
+            statusDescription=f"{status.value} {status.phrase}",
+            isBase64Encoded=False,
+            headers={"location": LOST_PAGE},
+            body=dumps({"message": cls.error_message}),
+        )
