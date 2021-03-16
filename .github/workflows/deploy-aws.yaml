@@ -34,6 +34,8 @@ jobs:
           aws-region: us-west-2
       - name: Run CDK Deployment
         env:
+          CAPTCHA_KEY: ${{ secrets.CAPTCHA_KEY }}
           CDK_ACCOUNT: ${{ secrets.AWS_ACCOUNT_ID }}
+          SAFE_BROWSING_KEY: ${{ secrets.SAFE_BROWSING_KEY }}
         run: |
           poetry run cdk deploy

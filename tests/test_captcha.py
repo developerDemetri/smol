@@ -18,7 +18,8 @@ class TestCaptcha(TestBase):
         ).once()
         flexmock(requests).should_receive("post").with_args(
             "https://www.google.com/recaptcha/api/siteverify",
-            json={"secret": CAPTCHA_KEY, "response": self.token},
+            data={"secret": CAPTCHA_KEY, "response": self.token},
+            headers={"content-type": "application/x-www-form-urlencoded"},
         ).and_return(mock_resp).once()
 
         self.assertTrue(Captcha.verify_captcha(self.token))
@@ -31,7 +32,8 @@ class TestCaptcha(TestBase):
         ).once()
         flexmock(requests).should_receive("post").with_args(
             "https://www.google.com/recaptcha/api/siteverify",
-            json={"secret": CAPTCHA_KEY, "response": self.token},
+            data={"secret": CAPTCHA_KEY, "response": self.token},
+            headers={"content-type": "application/x-www-form-urlencoded"},
         ).and_return(mock_resp).once()
 
         self.assertFalse(Captcha.verify_captcha(self.token))
@@ -43,7 +45,8 @@ class TestCaptcha(TestBase):
         ).once()
         flexmock(requests).should_receive("post").with_args(
             "https://www.google.com/recaptcha/api/siteverify",
-            json={"secret": CAPTCHA_KEY, "response": self.token},
+            data={"secret": CAPTCHA_KEY, "response": self.token},
+            headers={"content-type": "application/x-www-form-urlencoded"},
         ).and_return(mock_resp).once()
 
         self.assertFalse(Captcha.verify_captcha(self.token))
