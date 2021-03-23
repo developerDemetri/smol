@@ -2,7 +2,7 @@
 name = "smol"
 version = "0.4.2"
 description = "Core services for smol.io url shortener"
-authors = ["Demetrius Shargani <https://github.com/developerDemetr>"]
+authors = ["Demetrius Shargani <https://github.com/developerDemetri>"]
 
 [tool.poetry.dependencies]
 python = "~3.9.2"
