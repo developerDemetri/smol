@@ -1,11 +1,11 @@
 [tool.poetry]
 name = "smol"
-version = "0.4.1"
+version = "0.4.2"
 description = "Core services for smol.io url shortener"
-authors = ["Demetrius Shargani <developerdemetri@gmail.com>"]
+authors = ["Demetrius Shargani <https://github.com/developerDemetr>"]
 
 [tool.poetry.dependencies]
-python = "^3.9.2"
+python = "~3.9.2"
 awslambdaric = "^1.0.0"
 ecs-logging = "^1.0.0"
 pynamodb = "^5.0.3"
@@ -29,7 +29,7 @@ pytest-cov = "^2.11.1"
 safety = "^1.10.3"
 
 [build-system]
-requires = ["poetry-core>=1.0.0"]
+requires = ["poetry-core>=1.0.2"]
 build-backend = "poetry.core.masonry.api"
 
 [tool.black]
