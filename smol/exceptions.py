@@ -1,12 +1,12 @@
 """
-    smol specific exceptions
+smol specific exceptions
 """
 
 from http import HTTPStatus
 from json import dumps
 from os import environ
 
-from smol.alb_types import AlbResponse
+from smol.models import LambdaResponse
 
 LOST_PAGE = environ.get("LOST_PAGE", "https://smol.io/?im=lost")
 
@@ -20,14 +20,13 @@ class SmolError(Exception):
     error_message = "Something broke :/"
 
     @classmethod
-    def response(cls) -> AlbResponse:
+    def response(cls) -> LambdaResponse:
         """
-        Generates ALB Response for smol error
+        Generates HTTP Response for smol error
         """
-        return AlbResponse(
+        return LambdaResponse(
             statusCode=cls.error_status.value,
             statusDescription=f"{cls.error_status.value} {cls.error_status.phrase}",
-            isBase64Encoded=False,
             headers=dict(),
             body=dumps({"message": cls.error_message}),
         )
@@ -60,15 +59,14 @@ class LinkNotFound(SmolError):
     error_message = "Link Not Found"
 
     @classmethod
-    def response(cls) -> AlbResponse:
+    def response(cls) -> LambdaResponse:
         """
         Redirect missing Links to lost page
         """
         status = HTTPStatus.MOVED_PERMANENTLY
-        return AlbResponse(
+        return LambdaResponse(
             statusCode=status.value,
             statusDescription=f"{status.value} {status.phrase}",
-            isBase64Encoded=False,
             headers={"location": LOST_PAGE},
             body=dumps({"message": cls.error_message}),
         )

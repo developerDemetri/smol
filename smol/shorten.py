@@ -4,9 +4,9 @@ from random import choice
 
 import validators
 
-from smol.alb_types import AlbEvent
+from smol.models import LambdaRequest
 from smol.captcha import Captcha
-from smol.exceptions import BadMethod, BadRequest, SmolError
+from smol.exceptions import BadRequest, SmolError
 from smol.link import ID_CHARS, ID_LENGTH
 from smol.link import Link
 from smol.safe_site import SafeSite
@@ -21,19 +21,14 @@ class Shortener:
     Handles shortening links
     """
 
-    def __init__(self, request: AlbEvent) -> None:
-        req_method = request["httpMethod"].upper()
-        if req_method != "POST":
-            LOGGER.warning(f"Invalid method: {req_method}")
-            raise BadMethod()
-
-        req_type = str(request["headers"].get("content-type", str()))
+    def __init__(self, request: LambdaRequest) -> None:
+        req_type = str(request.headers.get("content-type", str()))
         if "application/json" not in req_type:
             LOGGER.warning(f"Invalid content-type: {req_type}")
             raise BadRequest()
 
         try:
-            body = loads(request.get("body", "{}"))
+            body = loads(str(request.body))
         except JSONDecodeError as err:
             LOGGER.warning(f"Invalid JSON body: {err}")
             raise BadRequest() from err
@@ -71,7 +66,7 @@ class Shortener:
             LOGGER.warning(f"Invalid token: {self.token}")
             raise BadRequest()
 
-        if not validators.url(self.target, public=True):
+        if not validators.url(self.target):
             LOGGER.warning(f"Invalid target: {self.target}")
             raise BadRequest()
 
