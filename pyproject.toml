@@ -1,49 +1,49 @@
 [tool.poetry]
 name = "smol"
-version = "0.4.2"
+version = "1.0.0"
 description = "Core services for smol.io url shortener"
 authors = ["Demetrius Shargani <https://github.com/developerDemetri>"]
 
 [tool.poetry.dependencies]
-python = "~3.9.2"
-awslambdaric = "^1.0.0"
-ecs-logging = "^1.0.0"
-pynamodb = "^5.0.3"
-requests = "^2.25.1"
-validators = "^0.18.2"
+python = "~3.11.8"
+awslambdaric = "~2.0.11"
+ecs-logging = "~2.1.0"
+pydantic = "~2.7.3"
+pynamodb = "~6.0.1"
+requests = "~2.32.3"
+validators = "~0.28.3"
 
 [tool.poetry.dev-dependencies]
-"aws-cdk.core" = "=1.93.0"
-"aws-cdk.aws-elasticloadbalancingv2" = "=1.93.0"
-"aws-cdk.aws-elasticloadbalancingv2-targets" = "=1.93.0"
-"aws-cdk.aws-dynamodb" = "=1.93.0"
-"aws-cdk.aws_ec2" = "=1.93.0"
-"aws-cdk.aws-lambda" = "=1.93.0"
-"aws-cdk.aws_logs" = "=1.93.0"
-black = "^20.8b1"
-flexmock = "^0.10.4"
-mypy = "^0.812"
-pylint = "^2.7.2"
-pytest = "^6.2.2"
-pytest-cov = "^2.11.1"
-safety = "^1.10.3"
+ruff = "^0.4.8"
+flexmock = "^0.12.1"
+mypy = "^1.10.0"
+pytest = "^8.2.2"
+pytest-cov = "^5.0.0"
+types-requests = "^2.32.0.20240602"
 
 [build-system]
-requires = ["poetry-core>=1.0.2"]
+requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
 
-[tool.black]
-line-length = 88
 
-[tool.pylint.messages_control]
-disable = "C0114, C0330, C0326, W0622, W1203, R0903"
+[tool.mypy]
+python_version = "3.11"
 
-[tool.pylint.format]
-max-line-length = "88"
 
 [tool.pytest.ini_options]
-minversion = "6.2.2"
+minversion = "8.2.2"
 addopts = "--cov=smol --cov-branch --cov-fail-under=95 --cov-report html --cov-report xml"
 testpaths = [
     "tests",
 ]
+
+
+[tool.ruff]
+line-length = 88
+indent-width = 4
+target-version = "py312"
+
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"

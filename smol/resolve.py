@@ -2,7 +2,7 @@ from logging import getLogger
 
 from smol.exceptions import BadMethod, BadRequest, LinkNotFound
 from smol.link import ID_REGEX, Link
-from smol.alb_types import AlbEvent
+from smol.models import LambdaRequest
 
 LOGGER = getLogger(__name__)
 
@@ -12,13 +12,12 @@ class Resolver:
     Handles Link resolution
     """
 
-    def __init__(self, request: AlbEvent) -> None:
-        req_method = request["httpMethod"].upper()
-        if req_method != "GET":
-            LOGGER.warning(f"Invalid method: {req_method}")
+    def __init__(self, request: LambdaRequest) -> None:
+        if request.method != "GET":
+            LOGGER.warning(f"Invalid method: {request.method}")
             raise BadMethod()
 
-        link_path = str(request["path"]).strip()
+        link_path = str(request.path).strip()
         self.link_id = link_path.strip("/").upper()
 
     def resolve_link(self) -> Link:

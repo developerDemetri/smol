@@ -1,18 +1,16 @@
-FROM python:3.9-slim
+FROM public.ecr.aws/lambda/python:3.11
 
-RUN useradd -m smol
-WORKDIR /home/smol
+ENV POETRY_VERSION=1.7.1
+WORKDIR ${LAMBDA_TASK_ROOT}
 
-RUN pip install poetry
+RUN curl -sSL https://install.python-poetry.org | python3 -
 
 COPY smol ./smol
 COPY pyproject.toml .
 COPY poetry.lock .
 
-RUN poetry build -f wheel
+RUN PATH="/root/.local/bin:$PATH" poetry build -f wheel
 RUN cd dist && ls | grep .whl | xargs pip install && cd ..
 RUN ls | xargs rm -rf
 
-USER smol
-ENTRYPOINT ["python", "-m", "awslambdaric"]
-CMD ["smol.api.alb_handler"]
+CMD ["smol.api.http_handler"]

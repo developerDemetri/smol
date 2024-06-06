@@ -7,7 +7,6 @@ from tests.test_base import TestBase
 
 
 class TestSafeSite(TestBase):
-
     site = "https://mrteefs.com"
 
     def test_is_safe_site(self):

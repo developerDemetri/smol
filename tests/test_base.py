@@ -2,63 +2,93 @@ from json import dumps
 from os import environ
 from unittest import TestCase
 
-from flexmock import flexmock, flexmock_teardown
+from flexmock import flexmock
+from flexmock._api import flexmock_teardown
 
 from smol.link import Link
 
 
 class TestBase(TestCase):
-
     mock_link = Link(id="SMOLIO", target="https://mrteefs.com")
     mock_get_event = {
-        "requestContext": {
-            "elb": {
-                "targetGroupArn": "arn:aws:elasticloadbalancing:eu-west-1:012345678901:targetgroup/mock/testing123"
-            }
-        },
-        "httpMethod": "GET",
-        "path": "/smolio",
-        "queryStringParameters": {},
+        "version": "2.0",
+        "routeKey": "$default",
+        "rawPath": "/smolio",
+        "rawQueryString": "",
         "headers": {
-            "accept": "*/*",
-            "accept-encoding": "gzip",
-            "accept-language": "en-US",
-            "connection": "keep-alive",
-            "cookie": "",
-            "host": "smol.io",
-            "upgrade-insecure-requests": "1",
-            "user-agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.11; rv:60.0) Gecko/20100101 Firefox/60.0",
-            "x-amzn-trace-id": "Root=1-5bdb40ca-556d8b0c50dc66f0511bf520",
-            "x-forwarded-for": "192.0.2.1",
-            "x-forwarded-port": "443",
+            "content-length": "25",
+            "x-amzn-tls-version": "TLSv1.3",
             "x-forwarded-proto": "https",
+            "x-forwarded-port": "443",
+            "x-forwarded-for": "89.98.233.85",
+            "accept": "*/*",
+            "x-amzn-tls-cipher-suite": "TLS_AES_128_GCM_SHA256",
+            "x-amzn-trace-id": "Root=1-6661bc42-0cfc3dba4ac557d9102d6107",
+            "host": "xxw3qkqlfjfeg4ugoisqa64eae0trlpq.lambda-url.eu-west-1.on.aws",
+            "content-type": "application/json",
+            "cache-control": "no-cache",
+            "accept-encoding": "gzip, deflate, br",
+            "user-agent": "PostmanRuntime/7.39.0",
         },
-        "body": dumps(dict()),
+        "requestContext": {
+            "accountId": "anonymous",
+            "apiId": "xxw3qkqlfjfeg4ugoisqa64eae0trlpq",
+            "domainName": "xxw3qkqlfjfeg4ugoisqa64eae0trlpq.lambda-url.eu-west-1.on.aws",
+            "domainPrefix": "xxw3qkqlfjfeg4ugoisqa64eae0trlpq",
+            "http": {
+                "method": "GET",
+                "path": "/smolio",
+                "protocol": "HTTP/1.1",
+                "sourceIp": "89.98.233.85",
+                "userAgent": "PostmanRuntime/7.39.0",
+            },
+            "requestId": "1e9a1dc2-22a2-4dff-94f8-de880577d938",
+            "routeKey": "$default",
+            "stage": "$default",
+            "time": "06/Jun/2024:13:40:18 +0000",
+            "timeEpoch": 1717681218529,
+        },
+        "body": "",
         "isBase64Encoded": False,
     }
+
     mock_post_event = {
-        "requestContext": {
-            "elb": {
-                "targetGroupArn": "arn:aws:elasticloadbalancing:eu-west-1:012345678901:targetgroup/mock/testing123"
-            }
-        },
-        "httpMethod": "POST",
-        "path": "/api/v1/link",
-        "queryStringParameters": {},
+        "version": "2.0",
+        "routeKey": "$default",
+        "rawPath": "/api/v1/link",
+        "rawQueryString": "",
         "headers": {
-            "accept": "*/*",
-            "accept-encoding": "gzip",
-            "accept-language": "en-US",
-            "connection": "keep-alive",
-            "content-type": "application/json",
-            "cookie": "",
-            "host": "smol.io",
-            "upgrade-insecure-requests": "1",
-            "user-agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.11; rv:60.0) Gecko/20100101 Firefox/60.0",
-            "x-amzn-trace-id": "Root=1-5bdb40ca-556d8b0c50dc66f0511bf520",
-            "x-forwarded-for": "192.0.2.1",
-            "x-forwarded-port": "443",
+            "content-length": "25",
+            "x-amzn-tls-version": "TLSv1.3",
             "x-forwarded-proto": "https",
+            "x-forwarded-port": "443",
+            "x-forwarded-for": "89.98.233.85",
+            "accept": "*/*",
+            "x-amzn-tls-cipher-suite": "TLS_AES_128_GCM_SHA256",
+            "x-amzn-trace-id": "Root=1-6661bc42-0cfc3dba4ac557d9102d6107",
+            "host": "xxw3qkqlfjfeg4ugoisqa64eae0trlpq.lambda-url.eu-west-1.on.aws",
+            "content-type": "application/json",
+            "cache-control": "no-cache",
+            "accept-encoding": "gzip, deflate, br",
+            "user-agent": "PostmanRuntime/7.39.0",
+        },
+        "requestContext": {
+            "accountId": "anonymous",
+            "apiId": "xxw3qkqlfjfeg4ugoisqa64eae0trlpq",
+            "domainName": "xxw3qkqlfjfeg4ugoisqa64eae0trlpq.lambda-url.eu-west-1.on.aws",
+            "domainPrefix": "xxw3qkqlfjfeg4ugoisqa64eae0trlpq",
+            "http": {
+                "method": "POST",
+                "path": "/api/v1/link",
+                "protocol": "HTTP/1.1",
+                "sourceIp": "89.98.233.85",
+                "userAgent": "PostmanRuntime/7.39.0",
+            },
+            "requestId": "1e9a1dc2-22a2-4dff-94f8-de880577d938",
+            "routeKey": "$default",
+            "stage": "$default",
+            "time": "06/Jun/2024:13:40:18 +0000",
+            "timeEpoch": 1717681218529,
         },
         "body": dumps(
             {

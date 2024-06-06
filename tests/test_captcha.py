@@ -7,7 +7,6 @@ from tests.test_base import TestBase
 
 
 class TestCaptcha(TestBase):
-
     token = "mock"
 
     def test_verify_captcha(self):

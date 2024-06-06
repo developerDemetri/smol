@@ -5,52 +5,28 @@ jobs:
     runs-on: ubuntu-latest
     env:
       OS: ubuntu-latest
-      PYTHON: "3.9"
+      PYTHON: "3.11"
+      POETRY_VERSION: "1.7.1"
     steps:
       - name: Checkout Code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
       - name: Setup Python
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v5
         with:
-          python-version: 3.9
+          python-version: 3.11
       - name: Install Poetry Dependencies
         run: |
-          pip install -U pip poetry
+          curl -sSL https://install.python-poetry.org | python3 -
           poetry install
       - name: Run Style Checks
         run: |
-          poetry run black --check smol/
-          poetry run black --check tests/
-          poetry run black --check smol_cdk/
+          poetry run ruff format
       - name: Run Linting
         run: |
-          poetry run pylint smol/
-          poetry run pylint smol_cdk/
+          poetry run ruff check
       - name: Run Type Checks
         run: |
           poetry run mypy smol/
-          poetry run mypy smol_cdk/
-      - name: Run Dependency Check
-        run: |
-          poetry run safety check
       - name: Run Unit Tests
         run: |
           poetry run pytest
-      - name: Report code coverage to CodeCov
-        uses: codecov/codecov-action@v1
-        with:
-          token: ${{ secrets.CODECOV_TOKEN }}
-          files: ./coverage.xml
-          flags: unittests
-          env_vars: OS,PYTHON
-          fail_ci_if_error: true
-      - name: Setup Node for CDK
-        uses: actions/setup-node@v2
-        with:
-          node-version: "14"
-      - name: Install CDK Dependencies
-        run: |
-          npm install -g aws-cdk
-      - name: Run CDK Check
-        run: |
-          poetry run cdk doctor
