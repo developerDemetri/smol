@@ -87,10 +87,10 @@ def http_handler(event: dict, _: Any) -> dict:
         try:
             LOGGER.info(event)
             req = LambdaRequest(
-                headers=event["headers"],
+                headers=event.get("headers", {}),
                 method=event["requestContext"]["http"]["method"].upper(),
                 path=event["requestContext"]["http"]["path"].lower(),
-                body=event["body"],
+                body=event.get("body", None),
             )
         except Exception as err:
             LOGGER.warning(f"Bad request object: {err}")
