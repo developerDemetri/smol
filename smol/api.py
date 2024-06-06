@@ -85,6 +85,7 @@ def http_handler(event: dict, _: Any) -> dict:
     try:
         req: LambdaRequest
         try:
+            LOGGER.info(event)
             req = LambdaRequest(
                 headers=event["headers"],
                 method=event["requestContext"]["http"]["method"].upper(),
