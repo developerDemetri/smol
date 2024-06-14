@@ -39,7 +39,14 @@ def process_request(req: LambdaRequest) -> LambdaResponse:
     """
     Route a well-formed request
     """
-    log_extras = {"request": req.model_dump(mode="json")}
+    log_extras = {
+        "request": req.model_dump(
+            mode="json",
+            exclude={
+                "headers",
+            },
+        )
+    }
     LOGGER.info("Processing request...", extra=log_extras)
     if req.path == "/api/v1/link":
         if req.method == "OPTIONS":
