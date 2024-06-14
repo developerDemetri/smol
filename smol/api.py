@@ -4,7 +4,7 @@ Main application entrypoint
 
 from http import HTTPStatus
 from json import dumps
-from logging import INFO
+from logging import INFO, ERROR
 from logging import basicConfig, getLogger, StreamHandler
 from typing import Any
 from sys import stdout
@@ -28,6 +28,10 @@ STANDARD_HEADERS = {
 ecs_handler = StreamHandler(stdout)
 ecs_handler.setFormatter(StdlibFormatter())
 basicConfig(level=INFO, handlers=[ecs_handler], force=True)
+# disable noisy logging
+getLogger("botocore").setLevel(ERROR)
+getLogger("pynamodb").setLevel(ERROR)
+
 LOGGER = getLogger(__name__)
 
 
@@ -35,9 +39,18 @@ def process_request(req: LambdaRequest) -> LambdaResponse:
     """
     Route a well-formed request
     """
+    log_extras = {
+        "request": req.model_dump(
+            mode="json",
+            exclude={
+                "headers",
+            },
+        )
+    }
+    LOGGER.info("Processing request...", extra=log_extras)
     if req.path == "/api/v1/link":
         if req.method == "OPTIONS":
-            LOGGER.info("Handling OPTIONS check...")
+            LOGGER.info("Handling OPTIONS check...", extra=log_extras)
             status = HTTPStatus.OK
             return LambdaResponse(
                 statusCode=status.value,
@@ -46,7 +59,7 @@ def process_request(req: LambdaRequest) -> LambdaResponse:
                 body=EMPTY_BODY,
             )
         elif req.method == "POST":
-            LOGGER.info("Handling shortener request...")
+            LOGGER.info("Handling shortener request...", extra=log_extras)
             new_link = Shortener(req).shorten_link()
             status = HTTPStatus.CREATED
             return LambdaResponse(
@@ -56,10 +69,10 @@ def process_request(req: LambdaRequest) -> LambdaResponse:
                 body=dumps({"id": new_link.id, "target": new_link.target}),
             )
         else:
-            LOGGER.warning(f"Invalid method: {req.method}")
+            LOGGER.warning(f"Invalid method: {req.method}", extra=log_extras)
             raise BadMethod()
     elif req.method == "GET":
-        LOGGER.info("Handling resolver request...")
+        LOGGER.info("Handling resolver request...", extra=log_extras)
         resolved_link = Resolver(req).resolve_link()
         status = HTTPStatus.MOVED_PERMANENTLY
         return LambdaResponse(
@@ -85,7 +98,6 @@ def http_handler(event: dict, _: Any) -> dict:
     try:
         req: LambdaRequest
         try:
-            LOGGER.info(event)
             req = LambdaRequest(
                 headers=event.get("headers", {}),
                 method=event["requestContext"]["http"]["method"].upper(),
